@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CapsuleCollider))]
+[AddComponentMenu("Quater-view Character Controller/Character")]
+[RequireComponent(typeof(CapsuleCollider)), RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour
 {
     public Rigidbody rigidbody;
@@ -33,7 +33,6 @@ public class Character : MonoBehaviour
 
     public void AddForce(Vector3 impulseForce)
     {
-
     }
 
     public Vector3 GetMouseWorldPosition()

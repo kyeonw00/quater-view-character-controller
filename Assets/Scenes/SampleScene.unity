@@ -617,6 +617,7 @@ GameObject:
   - component: {fileID: 1652953234}
   - component: {fileID: 1652953239}
   - component: {fileID: 1652953238}
+  - component: {fileID: 1652953240}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -714,12 +715,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1652953239}
-  collider: {fileID: 1652953234}
-  directionalInput: {x: 0, y: 0, z: 0}
-  moveSpeed: 5
   acceleration: 0.1
-  impactForce: 10
-  velocity: {x: 0, y: 0, z: 0}
+  moveVelocity: {x: 0, y: 0, z: 0}
   velocitySmooth: {x: 0, y: 0, z: 0}
   currentFloor: {fileID: 969612204}
 --- !u!54 &1652953239
@@ -738,3 +735,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &1652953240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652953233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ffc234484f1d054da6fef8916fa0e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 1652953238}
+  moveSpeed: 5
+  runSpeed: 8
