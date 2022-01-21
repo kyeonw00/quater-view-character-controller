@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour
     public Character character;
     public float moveSpeed;
     public float runSpeed;
+    public float dashForce;
 
     private bool _runEnabled;
 
@@ -16,6 +17,8 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) OnRunKeyDown();
         if (Input.GetKeyUp(KeyCode.LeftShift)) OnRunKeyUp();
+
+        if (Input.GetKeyDown(KeyCode.Space)) OnDashInput();
     }
 
     public void OnDirectionalInput(Vector3 directionalInput)
@@ -32,5 +35,10 @@ public class PlayerInput : MonoBehaviour
     public void OnRunKeyUp()
     {
         _runEnabled = false;
+    }
+
+    public void OnDashInput()
+    {
+        character.AddForce(new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")) * dashForce);
     }
 }
