@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class QuaterViewCharacter : MonoBehaviour
 {
-    public Rigidbody rigidbody;
-    public CapsuleCollider collider;
+    public new Rigidbody rigidbody;
+    public new CapsuleCollider collider;
     public float gravity;
     public float walkSpeed;
     public float runSpeed;

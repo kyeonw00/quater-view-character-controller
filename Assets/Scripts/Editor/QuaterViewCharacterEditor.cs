@@ -17,8 +17,9 @@ public class QuaterViewCharacterEditor : Editor
         Handles.ArrowHandleCap(0, _character.transform.position, _character.transform.rotation * Quaternion.LookRotation(_character.Velocity), 2f, EventType.Repaint);
     }
 
+    
     [DrawGizmo(GizmoType.Active | GizmoType.Selected)]
-    static void DrawColliderBottomPointGizmos(QuaterViewCharacter src, GizmoType gizmoType)
+    internal static void DrawColliderBottomPointGizmos(QuaterViewCharacter src, GizmoType _)
     {
         Vector3 bottomPoint = src.transform.position + src.collider.center + Vector3.down * (src.collider.height / 2 - src.collider.radius + 0.015f);
         
