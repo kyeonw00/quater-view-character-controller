@@ -16,6 +16,7 @@ public class QuaterViewCharacter : MonoBehaviour
     private Vector3 _dampVelocity = new Vector3();
     private float _gravityVelocity;
     private bool _grounded;
+    private RaycastHit[] _collisionCheckHit = new RaycastHit[8];
 
     public Vector3 Velocity => _velocity;
 
@@ -44,6 +45,7 @@ public class QuaterViewCharacter : MonoBehaviour
     internal void FixedUpdate()
     {
         CalculateVelocity();
+        CheckIfGrounded();
         Move(Time.fixedDeltaTime);
     }
 
@@ -60,7 +62,7 @@ public class QuaterViewCharacter : MonoBehaviour
         float acc = _grounded ? acceleration : airControl;
 
         _velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocity.x, ref _dampVelocity.x, acc);
-        // _velocity.y = velocity.y + _gravityVelocity;
+        _velocity.y = velocity.y + _gravityVelocity;
         _velocity.z = Mathf.SmoothDamp(velocity.z, targetVelocity.z, ref _dampVelocity.z, acc);
     }
 
@@ -70,7 +72,20 @@ public class QuaterViewCharacter : MonoBehaviour
 
     public void CheckIfGrounded()
     {
-        _grounded = true;
+        Vector3 bottomPoint = transform.position + collider.center + Vector3.down * (collider.height / 2 - collider.height);
+
+        int collisionCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, collider.radius, obstacleLayers);
+
+        if (collisionCount > 0)
+        {
+            _grounded = true;
+            _velocity.y = 0;
+            _dampVelocity.y = 0;
+        }
+        else
+        {
+            _grounded = false;
+        }
     }
 
     public void Move(float deltaTime)

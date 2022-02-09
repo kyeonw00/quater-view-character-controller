@@ -695,7 +695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1652953233}
   m_LocalRotation: {x: 0, y: 0, z: -0.0026179885, w: 0.9999966}
-  m_LocalPosition: {x: 0.92, y: 1.1, z: -1.74}
+  m_LocalPosition: {x: 4.07, y: 1.08, z: 1.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -715,10 +715,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1652953239}
   collider: {fileID: 1652953234}
-  gravity: 0
-  walkSpeed: 0
-  runSpeed: 0
-  acceleration: 0
+  gravity: 1
+  walkSpeed: 7
+  runSpeed: 12
+  acceleration: 0.01
+  airControl: 2
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 0
