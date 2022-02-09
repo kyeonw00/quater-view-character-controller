@@ -19,7 +19,7 @@ public class QuaterViewCharacter : MonoBehaviour
 
     public Vector3 Velocity => _velocity;
 
-    public void Reset()
+    internal void Reset()
     {
         TryGetComponent(out rigidbody);
         TryGetComponent(out collider);
@@ -31,17 +31,17 @@ public class QuaterViewCharacter : MonoBehaviour
         obstacleLayers = 0;
     }
 
-    public void OnEnable()
+    internal void OnEnable()
     {
         _gravityVelocity = (-2 * gravity) / Mathf.Pow(airControl, 2);
     }
 
-    public void Update()
+    internal void Update()
     {
         SetDirectionalInput();
     }
 
-    public void FixedUpdate()
+    internal void FixedUpdate()
     {
         CalculateVelocity();
         Move(Time.fixedDeltaTime);
@@ -60,7 +60,7 @@ public class QuaterViewCharacter : MonoBehaviour
         float acc = _grounded ? acceleration : airControl;
 
         _velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocity.x, ref _dampVelocity.x, acc);
-        _velocity.y = velocity.y + _gravityVelocity;
+        // _velocity.y = velocity.y + _gravityVelocity;
         _velocity.z = Mathf.SmoothDamp(velocity.z, targetVelocity.z, ref _dampVelocity.z, acc);
     }
 
