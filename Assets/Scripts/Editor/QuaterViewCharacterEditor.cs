@@ -26,4 +26,16 @@ public class QuaterViewCharacterEditor : Editor
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(bottomPoint, src.collider.radius);
     }
+
+    [DrawGizmo(GizmoType.Active | GizmoType.Selected)]
+    internal static void DrawCollisionHitsGizmos(QuaterViewCharacter src, GizmoType _)
+    {
+        RaycastHit[] hits = src.CollisionCheckHit;
+
+        Gizmos.color = Color.magenta;
+        for (int i = 0; i < src.CollisionCheckHitCount; i++)
+        {
+            Gizmos.DrawWireSphere(hits[i].point, 1f);
+        }
+    }
 }

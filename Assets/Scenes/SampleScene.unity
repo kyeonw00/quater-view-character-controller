@@ -723,6 +723,7 @@ MonoBehaviour:
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 64
+  collideMinimumDistance: 0.015
 --- !u!54 &1652953239
 Rigidbody:
   m_ObjectHideFlags: 0

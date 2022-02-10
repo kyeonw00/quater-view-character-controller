@@ -17,9 +17,12 @@ public class QuaterViewCharacter : MonoBehaviour
     private Vector3 _dampVelocity = new Vector3();
     private float _gravityVelocity;
     private bool _grounded;
+    private int _collisionCheckHitCount;
     private RaycastHit[] _collisionCheckHit = new RaycastHit[8];
 
     public Vector3 Velocity => _velocity;
+    public int CollisionCheckHitCount => _collisionCheckHitCount;
+    public RaycastHit[] CollisionCheckHit => _collisionCheckHit;
 
     internal void Reset()
     {
@@ -74,19 +77,18 @@ public class QuaterViewCharacter : MonoBehaviour
     public void CheckIfGrounded()
     {
         Vector3 bottomPoint = transform.position + collider.center + Vector3.down * (collider.height / 2 - collider.radius);
-        int collisionCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, collider.radius, obstacleLayers);
+        _collisionCheckHitCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, Mathf.Abs(_velocity.y), obstacleLayers);
 
-        if (collisionCount > 0)
+        if (_collisionCheckHitCount > 0)
         {
-            for (int i = 0; i < collisionCount; i++)
+            for (int i = 0; i < _collisionCheckHitCount; i++)
             {
-                Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + _collisionCheckHit[i].normal, Color.red, 1f);
-
                 if (_collisionCheckHit[i].distance <= collideMinimumDistance)
                 {
                     _grounded = true;
-                    _velocity.y = -1 * _collisionCheckHit[i].distance;
-                    _dampVelocity.y = -1 * _collisionCheckHit[i].distance;
+                    // float heightHalf = (collider.height / 2 + collider.radius / 2);
+                    _velocity.y = _collisionCheckHit[i].distance;
+                    _dampVelocity.y = _collisionCheckHit[i].distance;
                 }
             }
         }
