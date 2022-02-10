@@ -10,6 +10,7 @@ public class QuaterViewCharacter : MonoBehaviour
     public float acceleration;
     public float airControl;
     public LayerMask obstacleLayers;
+    public float collideMinimumDistance;
 
     private Vector3 _directionalInput = new Vector3();
     private Vector3 _velocity = new Vector3();
@@ -72,15 +73,22 @@ public class QuaterViewCharacter : MonoBehaviour
 
     public void CheckIfGrounded()
     {
-        Vector3 bottomPoint = transform.position + collider.center + Vector3.down * (collider.height / 2 - collider.height);
-
+        Vector3 bottomPoint = transform.position + collider.center + Vector3.down * (collider.height / 2 - collider.radius);
         int collisionCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, collider.radius, obstacleLayers);
 
         if (collisionCount > 0)
         {
-            _grounded = true;
-            _velocity.y = 0;
-            _dampVelocity.y = 0;
+            for (int i = 0; i < collisionCount; i++)
+            {
+                Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + _collisionCheckHit[i].normal, Color.red, 1f);
+
+                if (_collisionCheckHit[i].distance <= collideMinimumDistance)
+                {
+                    _grounded = true;
+                    _velocity.y = -1 * _collisionCheckHit[i].distance;
+                    _dampVelocity.y = -1 * _collisionCheckHit[i].distance;
+                }
+            }
         }
         else
         {
