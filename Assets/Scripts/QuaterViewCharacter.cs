@@ -12,6 +12,10 @@ public class QuaterViewCharacter : MonoBehaviour
     public LayerMask obstacleLayers;
     public float collideMinimumDistance;
 
+    [Header("Debug Settings")]
+    public bool enableVelocityVisualization;
+    public bool enableBottomCollidierVisualization;
+
     private Vector3 _directionalInput = new Vector3();
     private Vector3 _velocity = new Vector3();
     private Vector3 _dampVelocity = new Vector3();
@@ -44,6 +48,10 @@ public class QuaterViewCharacter : MonoBehaviour
     internal void Update()
     {
         SetDirectionalInput();
+        
+        // CalculateVelocity();
+        // CheckIfGrounded();
+        // Move(Time.fixedDeltaTime);
     }
 
     internal void FixedUpdate()
@@ -76,8 +84,13 @@ public class QuaterViewCharacter : MonoBehaviour
 
     public void CheckIfGrounded()
     {
-        Vector3 bottomPoint = transform.position + collider.center + Vector3.down * (collider.height / 2 - collider.radius);
+        Vector3 gravityVelocity = Vector3.up * _velocity.y * Time.deltaTime;
+        Vector3 bottomVertPoint = transform.position + Vector3.down * (collider.height / 2) + gravityVelocity;
+        Vector3 bottomPoint = transform.position + Vector3.down * (collider.height / 2 - collider.radius) + gravityVelocity;
         _collisionCheckHitCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, Mathf.Abs(_velocity.y), obstacleLayers);
+
+        Debug.DrawLine(bottomVertPoint + Vector3.left * 0.2f, bottomVertPoint + Vector3.right * 0.2f, Color.red);
+        Debug.DrawLine(bottomPoint + Vector3.left * 0.2f, bottomPoint + Vector3.right * 0.2f, Color.red);
 
         /// <remarks>
         /// 이미 terrain과 콜라이더가 겹쳐진 상태에서 collision checking 진행해도 hit point는 두 콜라이더 사이의 정규화된 지점으로 반환됨
@@ -95,10 +108,8 @@ public class QuaterViewCharacter : MonoBehaviour
                     _dampVelocity.y = _collisionCheckHit[i].distance;
                 }
 
-                if ((_collisionCheckHit[i].point - bottomPoint).sqrMagnitude < Mathf.Pow(collider.radius, 2))
-                {
-                    Vector3 dirToBottomPoint = (bottomPoint - _collisionCheckHit[i].point).normalized;
-                }
+                // Vector3 dirToBottomPoint = (bottomPoint - _collisionCheckHit[i].point).normalized;
+                // Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + dirToBottomPoint * 0.5f, Color.magenta);
             }
         }
         else

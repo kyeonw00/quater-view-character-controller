@@ -13,6 +13,11 @@ public class QuaterViewCharacterEditor : Editor
 
     public void OnSceneGUI()
     {
+        if (!_character.enableVelocityVisualization)
+        {
+            return;
+        }
+
         Handles.color = Color.green;
         Handles.ArrowHandleCap(0, _character.transform.position, _character.transform.rotation * Quaternion.LookRotation(_character.Velocity), 2f, EventType.Repaint);
     }
@@ -21,10 +26,15 @@ public class QuaterViewCharacterEditor : Editor
     [DrawGizmo(GizmoType.Active | GizmoType.Selected)]
     internal static void DrawColliderBottomPointGizmos(QuaterViewCharacter src, GizmoType _)
     {
+        if (!src.enableBottomCollidierVisualization)
+        {
+            return;
+        }
+
         Vector3 bottomPoint = src.transform.position + src.collider.center + Vector3.down * (src.collider.height / 2 - src.collider.radius + 0.015f);
         
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(bottomPoint, src.collider.radius);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(bottomPoint, 0.15f);
     }
 
     [DrawGizmo(GizmoType.Active | GizmoType.Selected)]
