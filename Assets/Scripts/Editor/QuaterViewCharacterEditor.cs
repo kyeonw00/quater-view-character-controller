@@ -35,7 +35,7 @@ public class QuaterViewCharacterEditor : Editor
         Gizmos.color = Color.magenta;
         for (int i = 0; i < src.CollisionCheckHitCount; i++)
         {
-            Gizmos.DrawWireSphere(hits[i].point, 1f);
+            Gizmos.DrawWireSphere(hits[i].point, 0.15f);
         }
     }
 }

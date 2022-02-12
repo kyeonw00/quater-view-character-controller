@@ -38,7 +38,7 @@ public class QuaterViewCharacter : MonoBehaviour
 
     internal void OnEnable()
     {
-        _gravityVelocity = (-2 * gravity) / Mathf.Pow(airControl, 2);
+        _gravityVelocity = -2 * gravity / Mathf.Pow(airControl, 2);
     }
 
     internal void Update()
@@ -79,6 +79,11 @@ public class QuaterViewCharacter : MonoBehaviour
         Vector3 bottomPoint = transform.position + collider.center + Vector3.down * (collider.height / 2 - collider.radius);
         _collisionCheckHitCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, Mathf.Abs(_velocity.y), obstacleLayers);
 
+        /// <remarks>
+        /// 이미 terrain과 콜라이더가 겹쳐진 상태에서 collision checking 진행해도 hit point는 두 콜라이더 사이의 정규화된 지점으로 반환됨
+        /// <code>_grounded</code>가 <value>true</value> 일 때, hit point 기준으로 콜라이더가 서로 겹쳐져 있지 않은지 확인하는 로직 필요
+        /// </remarks>
+
         if (_collisionCheckHitCount > 0)
         {
             for (int i = 0; i < _collisionCheckHitCount; i++)
@@ -86,9 +91,13 @@ public class QuaterViewCharacter : MonoBehaviour
                 if (_collisionCheckHit[i].distance <= collideMinimumDistance)
                 {
                     _grounded = true;
-                    // float heightHalf = (collider.height / 2 + collider.radius / 2);
                     _velocity.y = _collisionCheckHit[i].distance;
                     _dampVelocity.y = _collisionCheckHit[i].distance;
+                }
+
+                if ((_collisionCheckHit[i].point - bottomPoint).sqrMagnitude < Mathf.Pow(collider.radius, 2))
+                {
+                    Vector3 dirToBottomPoint = (bottomPoint - _collisionCheckHit[i].point).normalized;
                 }
             }
         }
