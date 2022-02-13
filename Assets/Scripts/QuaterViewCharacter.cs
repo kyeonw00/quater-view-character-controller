@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class QuaterViewCharacter : MonoBehaviour
 {
-    public new Rigidbody rigidbody;
+    // public new Rigidbody rigidbody;
     public new CapsuleCollider collider;
     public float gravity;
     public float walkSpeed;
@@ -11,10 +11,12 @@ public class QuaterViewCharacter : MonoBehaviour
     public float airControl;
     public LayerMask obstacleLayers;
     public float collideMinimumDistance;
+    public float maxClimbableAngle;
 
     [Header("Debug Settings")]
     public bool enableVelocityVisualization;
     public bool enableBottomCollidierVisualization;
+    public bool enableHitNormalVisualization;
 
     private Vector3 _directionalInput = new Vector3();
     private Vector3 _velocity = new Vector3();
@@ -30,7 +32,7 @@ public class QuaterViewCharacter : MonoBehaviour
 
     internal void Reset()
     {
-        TryGetComponent(out rigidbody);
+        // TryGetComponent(out rigidbody);
         TryGetComponent(out collider);
 
         gravity = 0;
@@ -48,10 +50,6 @@ public class QuaterViewCharacter : MonoBehaviour
     internal void Update()
     {
         SetDirectionalInput();
-        
-        // CalculateVelocity();
-        // CheckIfGrounded();
-        // Move(Time.fixedDeltaTime);
     }
 
     internal void FixedUpdate()
@@ -92,15 +90,15 @@ public class QuaterViewCharacter : MonoBehaviour
         Debug.DrawLine(bottomVertPoint + Vector3.left * 0.2f, bottomVertPoint + Vector3.right * 0.2f, Color.red);
         Debug.DrawLine(bottomPoint + Vector3.left * 0.2f, bottomPoint + Vector3.right * 0.2f, Color.red);
 
-        /// <remarks>
-        /// 이미 terrain과 콜라이더가 겹쳐진 상태에서 collision checking 진행해도 hit point는 두 콜라이더 사이의 정규화된 지점으로 반환됨
-        /// <code>_grounded</code>가 <value>true</value> 일 때, hit point 기준으로 콜라이더가 서로 겹쳐져 있지 않은지 확인하는 로직 필요
-        /// </remarks>
-
         if (_collisionCheckHitCount > 0)
         {
             for (int i = 0; i < _collisionCheckHitCount; i++)
             {
+                if (enableHitNormalVisualization)
+                {
+                    Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + _collisionCheckHit[i].normal, Color.yellow);
+                }
+
                 if (_collisionCheckHit[i].distance <= collideMinimumDistance)
                 {
                     _grounded = true;
@@ -108,8 +106,11 @@ public class QuaterViewCharacter : MonoBehaviour
                     _dampVelocity.y = _collisionCheckHit[i].distance;
                 }
 
-                // Vector3 dirToBottomPoint = (bottomPoint - _collisionCheckHit[i].point).normalized;
-                // Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + dirToBottomPoint * 0.5f, Color.magenta);
+                if (GetSlopeAngle(_collisionCheckHit[i].normal, Vector3.up) > maxClimbableAngle)
+                {
+                    /* Make the character to slide down the hit slope */
+                    Debug.Log("Slide down slope");
+                }
             }
         }
         else
@@ -122,5 +123,10 @@ public class QuaterViewCharacter : MonoBehaviour
     {
         Vector3 velocityInFrame = _velocity * deltaTime;
         transform.Translate(velocityInFrame);
+    }
+
+    public float GetSlopeAngle(Vector3 normalVector, Vector3 fromVector)
+    {
+        return Vector3.Angle(fromVector, normalVector);
     }
 }
