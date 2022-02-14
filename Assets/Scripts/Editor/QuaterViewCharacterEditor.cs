@@ -46,6 +46,7 @@ public class QuaterViewCharacterEditor : Editor
         for (int i = 0; i < src.CollisionCheckHitCount; i++)
         {
             Gizmos.DrawWireSphere(hits[i].point, 0.15f);
+            Handles.Label(hits[i].point, $"{hits[i].collider.name} - {hits[i].point}");
         }
     }
 }

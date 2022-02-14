@@ -83,17 +83,22 @@ public class QuaterViewCharacter : MonoBehaviour
     public void CheckIfGrounded()
     {
         Vector3 gravityVelocity = Vector3.up * _velocity.y * Time.deltaTime;
-        Vector3 bottomVertPoint = transform.position + Vector3.down * (collider.height / 2) + gravityVelocity;
+        // Vector3 bottomVertPoint = transform.position + Vector3.down * (collider.height / 2) + gravityVelocity;
         Vector3 bottomPoint = transform.position + Vector3.down * (collider.height / 2 - collider.radius) + gravityVelocity;
         _collisionCheckHitCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, Mathf.Abs(_velocity.y), obstacleLayers);
 
-        Debug.DrawLine(bottomVertPoint + Vector3.left * 0.2f, bottomVertPoint + Vector3.right * 0.2f, Color.red);
-        Debug.DrawLine(bottomPoint + Vector3.left * 0.2f, bottomPoint + Vector3.right * 0.2f, Color.red);
+        /// <remarks>
+        /// Based on collision hit visualization, Collision test returns weired result.
+        /// (0, 0, 0) is returning.
+        /// </remarks>
+
+        Debug.DrawLine(bottomPoint, bottomPoint + Vector3.down * Mathf.Abs(_velocity.y), Color.blue);
 
         if (_collisionCheckHitCount > 0)
         {
             for (int i = 0; i < _collisionCheckHitCount; i++)
             {
+                Debug.Log($"Hit - {_collisionCheckHit[i].collider.name}");
                 if (enableHitNormalVisualization)
                 {
                     Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + _collisionCheckHit[i].normal, Color.yellow);
@@ -110,6 +115,8 @@ public class QuaterViewCharacter : MonoBehaviour
                 {
                     /* Make the character to slide down the hit slope */
                     Debug.Log("Slide down slope");
+                    _velocity.x += _collisionCheckHit[i].normal.x * _velocity.x;
+                    _velocity.z += _collisionCheckHit[i].normal.z * _velocity.z;
                 }
             }
         }
