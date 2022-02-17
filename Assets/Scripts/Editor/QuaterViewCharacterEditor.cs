@@ -31,10 +31,10 @@ public class QuaterViewCharacterEditor : Editor
             return;
         }
 
-        Vector3 bottomPoint = src.transform.position + src.collider.center + Vector3.down * (src.collider.height / 2 - src.collider.radius + 0.015f);
-        
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(bottomPoint, 0.15f);
+        Vector3 bottomPoint = src.transform.position + Vector3.down * (src.collider.height / 2 - src.collider.radius) + (Vector3.up * src.Velocity.y * Time.fixedDeltaTime);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(bottomPoint, src.collider.radius);
     }
 
     [DrawGizmo(GizmoType.Active | GizmoType.Selected)]

@@ -82,7 +82,7 @@ public class QuaterViewCharacter : MonoBehaviour
 
     public void CheckIfGrounded()
     {
-        Vector3 gravityVelocity = Vector3.up * _velocity.y * Time.deltaTime;
+        Vector3 gravityVelocity = Vector3.up * _velocity.y * Time.fixedDeltaTime;
         // Vector3 bottomVertPoint = transform.position + Vector3.down * (collider.height / 2) + gravityVelocity;
         Vector3 bottomPoint = transform.position + Vector3.down * (collider.height / 2 - collider.radius) + gravityVelocity;
         _collisionCheckHitCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, Mathf.Abs(_velocity.y), obstacleLayers);
@@ -92,13 +92,12 @@ public class QuaterViewCharacter : MonoBehaviour
         /// (0, 0, 0) is returning.
         /// </remarks>
 
-        Debug.DrawLine(bottomPoint, bottomPoint + Vector3.down * Mathf.Abs(_velocity.y), Color.blue);
+        Debug.DrawLine(bottomPoint, bottomPoint + gravityVelocity, Color.blue);
 
         if (_collisionCheckHitCount > 0)
         {
             for (int i = 0; i < _collisionCheckHitCount; i++)
             {
-                Debug.Log($"Hit - {_collisionCheckHit[i].collider.name}");
                 if (enableHitNormalVisualization)
                 {
                     Debug.DrawLine(_collisionCheckHit[i].point, _collisionCheckHit[i].point + _collisionCheckHit[i].normal, Color.yellow);
@@ -108,13 +107,12 @@ public class QuaterViewCharacter : MonoBehaviour
                 {
                     _grounded = true;
                     _velocity.y = _collisionCheckHit[i].distance;
-                    _dampVelocity.y = _collisionCheckHit[i].distance;
+                    // _dampVelocity.y = _collisionCheckHit[i].distance;
                 }
 
                 if (GetSlopeAngle(_collisionCheckHit[i].normal, Vector3.up) > maxClimbableAngle)
                 {
                     /* Make the character to slide down the hit slope */
-                    Debug.Log("Slide down slope");
                     _velocity.x += _collisionCheckHit[i].normal.x * _velocity.x;
                     _velocity.z += _collisionCheckHit[i].normal.z * _velocity.z;
                 }
