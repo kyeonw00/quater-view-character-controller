@@ -82,9 +82,9 @@ public class QuaterViewCharacter : MonoBehaviour
 
     public void CheckIfGrounded()
     {
-        Vector3 gravityVelocity = Vector3.up * _velocity.y * Time.fixedDeltaTime;
+        float gravityVelocity = _velocity.y * Time.fixedDeltaTime;
         // Vector3 bottomVertPoint = transform.position + Vector3.down * (collider.height / 2) + gravityVelocity;
-        Vector3 bottomPoint = transform.position + Vector3.down * (collider.height / 2 - collider.radius) + gravityVelocity;
+        Vector3 bottomPoint = transform.position + Vector3.down * (collider.height / 2 - collider.radius) * gravityVelocity;
         _collisionCheckHitCount = Physics.SphereCastNonAlloc(bottomPoint, collider.radius, Vector3.down, _collisionCheckHit, Mathf.Abs(_velocity.y), obstacleLayers);
 
         /// <remarks>
@@ -92,7 +92,7 @@ public class QuaterViewCharacter : MonoBehaviour
         /// (0, 0, 0) is returning.
         /// </remarks>
 
-        Debug.DrawLine(bottomPoint, bottomPoint + gravityVelocity, Color.blue);
+        Debug.DrawLine(bottomPoint, bottomPoint + Vector3.up * gravityVelocity, Color.blue);
 
         if (_collisionCheckHitCount > 0)
         {
@@ -107,7 +107,6 @@ public class QuaterViewCharacter : MonoBehaviour
                 {
                     _grounded = true;
                     _velocity.y = _collisionCheckHit[i].distance;
-                    // _dampVelocity.y = _collisionCheckHit[i].distance;
                 }
 
                 if (GetSlopeAngle(_collisionCheckHit[i].normal, Vector3.up) > maxClimbableAngle)
