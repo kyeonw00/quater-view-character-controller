@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class SphereCastTest : MonoBehaviour
@@ -5,7 +6,6 @@ public class SphereCastTest : MonoBehaviour
     public LayerMask obstacleLayerMask;
     public float sphereRadius;
     public float collisionCheckLength;
-    public float skinWidth = 0.02f;
     public QueryTriggerInteraction triggerInteraction;
 
     private int _collisionHitCount = 0;
@@ -27,7 +27,7 @@ public class SphereCastTest : MonoBehaviour
             Gizmos.DrawLine(transform.position, transform.position + dirToHitPoint * sphereRadius);
             
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(_collisionHits[i].point, 0.15f);
+            Gizmos.DrawWireSphere(_collisionHits[i].point, _collisionHits[i].distance);
             Gizmos.DrawLine(_collisionHits[i].point, _collisionHits[i].point + dirToHitPoint * -_collisionHits[i].distance);
         }
     }
