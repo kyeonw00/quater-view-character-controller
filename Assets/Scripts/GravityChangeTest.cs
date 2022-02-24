@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class GravityChangeTest : MonoBehaviour
 {
@@ -9,6 +6,7 @@ public class GravityChangeTest : MonoBehaviour
     public Vector3 moveDirection;
     public float speed;
     public float sphereRadius;
+    public float raycastLength;
     public bool applyRaycastLength;
 
     private Vector3 _velocity;
@@ -19,18 +17,15 @@ public class GravityChangeTest : MonoBehaviour
     {
         _velocity = moveDirection * speed * Time.deltaTime;
 
-        float raycastLength = applyRaycastLength ? _velocity.sqrMagnitude : 0;
+        float raycastLength = applyRaycastLength ? this.raycastLength : 0;
         _collisionHitCount = Physics.SphereCastNonAlloc(transform.position, sphereRadius, moveDirection, _collisionHits, raycastLength, collisionMask);
 
         if (_collisionHitCount > 0)
         {
             Debug.Log("Hit something");
-            if (_collisionHits[0].distance < 0)
-            {
-                Vector3 adjustVelocity = _collisionHits[0].normal * _velocity.sqrMagnitude;
-                _velocity.x += adjustVelocity.x;
-                _velocity.z += adjustVelocity.z;
-            }
+            Vector3 adjustVelocity = _collisionHits[0].normal * _velocity.sqrMagnitude;
+            _velocity.x += adjustVelocity.x;
+            _velocity.z += adjustVelocity.z;
         }
 
         transform.Translate(_velocity);
