@@ -17,16 +17,31 @@ public class GravityChangeTest : MonoBehaviour
     {
         _velocity = moveDirection * speed * Time.deltaTime;
 
-        float raycastLength = applyRaycastLength ? _velocity.magnitude : 0;
+        float raycastLength = _velocity.magnitude;
         _collisionHitCount = Physics.SphereCastNonAlloc(transform.position, sphereRadius, moveDirection, _collisionHits, raycastLength, collisionMask);
 
         if (_collisionHitCount > 0)
         {
             Debug.Log("Hit something");
-            Vector3 adjustVelocity = _collisionHits[0].normal * _velocity.sqrMagnitude;
+            Vector3 adjustVelocity = new Vector3();
+            float velocityPower = _velocity.sqrMagnitude;
+
+            for (int i = 0; i < _collisionHitCount; i++)
+            {
+                Vector3 repulsivePower = _collisionHits[i].normal * velocityPower;
+                adjustVelocity.x += repulsivePower.x;
+                adjustVelocity.y = _collisionHits[i].distance * -1;
+                adjustVelocity.z += repulsivePower.z;
+            }
+
             _velocity.x += adjustVelocity.x;
-            _velocity.y = _collisionHits[0].distance * -1;
+            _velocity.y = adjustVelocity.y;
             _velocity.z += adjustVelocity.z;
+
+            //  Vector3 adjustVelocity = _collisionHits[0].normal * _velocity.sqrMagnitude;
+            // _velocity.x += adjustVelocity.x;
+            // _velocity.y = _collisionHits[0].distance * -1;
+            // _velocity.z += adjustVelocity.z;
         }
 
         transform.Translate(_velocity);
